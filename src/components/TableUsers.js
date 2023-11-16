@@ -8,7 +8,8 @@ import ModalConfirm from "./ModalConfirm";
 import _ from "lodash";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./TableUser.scss";
-
+import Button from "react-bootstrap/Button";
+import { debounce } from "lodash";
 const TableUsers = (props) => {
   const [listUser, setlistUser] = useState([]);
   const [totalUser, setTotalUser] = useState(0);
@@ -22,6 +23,8 @@ const TableUsers = (props) => {
   const [sortBy, setsortBy] = useState("asc");
   const [sortField, setSortField] = useState("id");
 
+  const [keyWord, setKeyWord] = useState("");
+
   const handleSort = (sortBy, sortField) => {
     setsortBy(sortBy);
     setSortField(sortField);
@@ -31,8 +34,6 @@ const TableUsers = (props) => {
     cloneListUser = _.orderBy(cloneListUser, [sortField], [sortBy]);
     setlistUser(cloneListUser);
   };
-
-  console.log("check sort>>>> ", sortBy, sortField);
 
   const handleUpdateTable = (user) => {
     setlistUser([user, ...listUser]);
@@ -90,6 +91,19 @@ const TableUsers = (props) => {
     setUserDeleteData(user);
     setShowDelete(true);
   };
+
+  const handleSearch = () => {
+    let word = keyWord;
+    console.log("word>>> ", word);
+    if (word) {
+      let cloneListUser = _.cloneDeep(listUser);
+      cloneListUser = cloneListUser.filter((item) => item.email.includes(word));
+      setlistUser(cloneListUser);
+    } else {
+      getUser(1);
+    }
+  };
+
   return (
     <>
       <div className="my-3 add-user">
@@ -97,11 +111,16 @@ const TableUsers = (props) => {
         <ModalAddNew handleUpdateTable={handleUpdateTable} />
       </div>
 
-      <div className="col-6 my-3">
+      <div className="col-6 my-3 searchplace">
         <input
           className="form-control"
           placeholder="Search user by email....."
+          value={keyWord}
+          onChange={(e) => setKeyWord(e.target.value.trimStart())}
         />
+        <Button variant="primary" onClick={handleSearch}>
+          Search User
+        </Button>
       </div>
       <Table striped bordered hover>
         <thead>
