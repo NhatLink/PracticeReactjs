@@ -10,6 +10,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./TableUser.scss";
 import Button from "react-bootstrap/Button";
 import { debounce } from "lodash";
+import { CSVLink, CSVDownload } from "react-csv";
 const TableUsers = (props) => {
   const [listUser, setlistUser] = useState([]);
   const [totalUser, setTotalUser] = useState(0);
@@ -24,6 +25,8 @@ const TableUsers = (props) => {
   const [sortField, setSortField] = useState("id");
 
   const [keyWord, setKeyWord] = useState("");
+
+  const [dataExport, setDataExport] = useState([]);
 
   const handleSort = (sortBy, sortField) => {
     setsortBy(sortBy);
@@ -104,11 +107,56 @@ const TableUsers = (props) => {
     }
   };
 
+  // const email = listUser.map((item) => item.email);
+  // console.log("check email", email);
+
+  // console.log("check list user", listUser);
+  // const valuesArray = listUser.map((item) => Object.values(item).slice(1));
+  // valuesArray.unshift(["email", "first_name", "last_name", "avatar"]);
+  // console.log(valuesArray);
+  // const csvData = valuesArray;
+
+  const getUserExport = (event, done) => {
+    let result = [];
+    if (listUser && listUser.length > 0) {
+      result.push(["Id", "Email", "First Name", "Last Name", "Avatar Pic"]);
+      listUser.map((item, index) => {
+        let arr = [];
+        arr[0] = item.id;
+        arr[1] = item.email;
+        arr[2] = item.first_name;
+        arr[3] = item.last_name;
+        arr[4] = item.avatar;
+        result.push(arr);
+      });
+    }
+    setDataExport(result);
+    done();
+  };
+
   return (
     <>
       <div className="my-3 add-user">
-        <span>List Users</span>
-        <ModalAddNew handleUpdateTable={handleUpdateTable} />
+        <div>List Users</div>
+        <div className="group_btn">
+          <input id="test" type="file" hidden></input>
+          <ModalAddNew handleUpdateTable={handleUpdateTable} />
+          <CSVLink
+            filename={"my-file.csv"}
+            className="btn btn-warning"
+            target="_blank"
+            data={dataExport}
+            asyncOnClick={true}
+            onClick={getUserExport}
+          >
+            <i className="fa-solid fa-file-arrow-down"></i> Download me
+          </CSVLink>
+
+          <label htmlFor="test" className="btn btn-warning">
+            Import file
+          </label>
+          {/* <CSVDownload data={csvData} target="_blank" />; */}
+        </div>
       </div>
 
       <div className="col-6 my-3 searchplace">
