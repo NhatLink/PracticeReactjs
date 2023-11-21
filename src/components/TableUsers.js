@@ -11,6 +11,9 @@ import "./TableUser.scss";
 import Button from "react-bootstrap/Button";
 import { debounce } from "lodash";
 import { CSVLink, CSVDownload } from "react-csv";
+import Papa from "papaparse";
+import { toast } from "react-toastify";
+
 const TableUsers = (props) => {
   const [listUser, setlistUser] = useState([]);
   const [totalUser, setTotalUser] = useState(0);
@@ -134,12 +137,64 @@ const TableUsers = (props) => {
     done();
   };
 
+  const handleImportFile = (e) => {
+    if (e.target && e.target.files[0] && e.target.files) {
+      let file = e.target.files[0];
+
+      if (file.type !== "text/csv") {
+        toast.error("Only accept csv file...");
+        return;
+      }
+      // Parse local CSV file
+      Papa.parse(file, {
+        // header: true,
+        complete: function (results) {
+          let rawCSV = results.data;
+          if (rawCSV.length > 0) {
+            if (rawCSV[0] && rawCSV[0].length === 4) {
+              if (
+                rawCSV[0][0] !== "email" ||
+                rawCSV[0][1] !== "first_name" ||
+                rawCSV[0][2] !== "last_name" ||
+                rawCSV[0][3] !== "avatar"
+              ) {
+                toast.error("Wrong header CSV file!!!");
+              } else {
+                let result = [];
+
+                rawCSV.map((item, index) => {
+                  if (index > 0 && item.length === 4) {
+                    let ojb = {};
+                    ojb.email = item[0];
+                    ojb.first_name = item[1];
+                    ojb.last_name = item[2];
+                    ojb.avatar = item[3];
+                    result.push(ojb);
+                  }
+                });
+
+                console.log(result);
+              }
+            } else {
+              toast.error("Wrong file fomat csv file !!!");
+            }
+          } else toast.error("Not found data on CSV file!!!");
+        },
+      });
+    }
+  };
+
   return (
     <>
       <div className="my-3 add-user">
         <div>List Users</div>
         <div className="group_btn">
-          <input id="test" type="file" hidden></input>
+          <input
+            id="test"
+            type="file"
+            onChange={(e) => handleImportFile(e)}
+            hidden
+          ></input>
           <ModalAddNew handleUpdateTable={handleUpdateTable} />
           <CSVLink
             filename={"my-file.csv"}
