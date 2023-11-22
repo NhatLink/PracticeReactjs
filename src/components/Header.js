@@ -2,27 +2,45 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import logo from "../assest/images/download.jfif";
+import logoImg from "../assest/images/LogoImg.png";
+import { NavLink } from "react-router-dom";
 
 const Header = (props) => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        <Navbar.Brand href="/">
+          <img
+            src={logoImg}
+            width="30"
+            height="30"
+            className="d-inline-block align-top"
+            alt="Logo img"
+          />
+          Nhat Link Project
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
+            <NavLink to={"/"} className="nav-link">
+              Home
+            </NavLink>
+            <NavLink to={"/user"} className="nav-link">
+              User
+            </NavLink>
+          </Nav>
+          <Nav>
+            <img
+              src={logo}
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+              alt="Logo img"
+            />
+            <NavDropdown title="Setting">
+              <NavDropdown.Item href="/login">Log In</NavDropdown.Item>
+              <NavDropdown.Item href="/logout">Log out</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
