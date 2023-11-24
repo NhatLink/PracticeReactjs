@@ -1,7 +1,7 @@
 import axios from "./custome-axios";
 
 const fetchAlluser = (page) => {
-  return axios.get(`users?page=${page}`);
+  return axios.get(`api/users?page=${page}`);
 };
 
 const postCreateUser = (name, job) => {
@@ -15,4 +15,8 @@ const putEdiUser = (id, name, job) => {
 const deleteUser = (id) => {
   return axios.delete(`api/users/${id}`);
 };
-export { fetchAlluser, postCreateUser, putEdiUser, deleteUser };
+
+const loginAPi = (email, password) => {
+  return axios.post("api/login", { email, password });
+};
+export { fetchAlluser, postCreateUser, putEdiUser, deleteUser, loginAPi };
