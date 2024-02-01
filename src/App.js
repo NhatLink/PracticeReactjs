@@ -6,8 +6,11 @@ import { ToastContainer } from "react-toastify";
 import Home from "./components/Home";
 import Login from "./components/login";
 import { Link, Route, Routes } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "./context/UseContext";
 
 function App() {
+  const { user } = useContext(UserContext);
   return (
     <>
       <div className="App-container">
